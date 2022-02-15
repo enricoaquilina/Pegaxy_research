@@ -143,9 +143,9 @@ if __name__ == '__main__':
     ext = PegaxyExtractor()
 
 # Start Extraction
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-    asyncio.run(ext.start(ext.get_count()))
-    asyncio.run(ext.get_deets())
+    # asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+    # asyncio.run(ext.start(ext.get_count()))
+    # asyncio.run(ext.get_deets())
 
     
 # Start Transformation
@@ -153,65 +153,6 @@ if __name__ == '__main__':
     
     # pegas = ext.load('all_pegas 20220213.pkl')
     pegas = ext.load()
-    # for pega in pegas:
-    #     if 'message' not in pega:
-    #         if 'nft' in pega and 'total_races' in pega['nft'] and pega['nft']['total_races'] != 0:
-    #             win_rate = pega['nft']['win'] / pega['nft']['total_races']
-    #             pega['win_rate'] = win_rate * 100
-    #             # pega['win_rate'] = "{:.4f}".format(win_rate * 100)
-    #         if 'price' in pega['listing']:
-    #             pega['price'] = int(pega['listing']['price'])/1000000
-    #         if  pega['nft']['speed'] > 0 and pega['nft']['strength'] > 0 and pega['nft']['wind'] > 0 and \
-    #             pega['nft']['water'] > 0 and pega['nft']['fire'] > 0 and pega['nft']['lighting'] > 0:
-    #             pega['all_stats_mean'] = statistics.fmean([pega['nft']['speed'], pega['nft']['strength'], pega['nft']['wind'], pega['nft']['water'], pega['nft']['fire'], pega['nft']['lighting']])
-    #             pega['rng_mean'] = statistics.fmean([pega['nft']['wind'], pega['nft']['water'], pega['nft']['fire'], pega['nft']['lighting']])
-
-
-
-    # df = pd.DataFrame(pegas)
-    # # Slice dataframe to get separate win rates (20%-30%, 30%-40%, 40%-50%, 50-60%)
-    # # Compute mean stats value
-    # df['win_rate'] = df['win_rate'].replace(np.nan, 0)
-    # df['price'] = df['price'].replace(np.nan, 0)
-    # df = df.sort_values(by=['win_rate'], ascending=False)
-
-
-    # win_rate1 = df[df['win_rate'] > 19]
-    # win_rate2 = df[(df['win_rate'] > 19) & (df['win_rate'] <= 30)]
-    # win_rate3 = df[(df['win_rate'] > 30) & (df['win_rate'] <= 40)]
-    # win_rate4 = df[(df['win_rate'] > 40) & (df['win_rate'] <= 50)]
-    # win_rate5 = df[df['win_rate'] > 50]
-    
-    # test = df[df['price'] <= 3000]
-    # test = test.sort_values(by=['win_rate'], ascending=False).head(20) 
-    # # print(test)
-
-    # plt.scatter(win_rate1['win_rate'], win_rate1['price'])
-    # plt.show()
-
-    # plt.scatter(win_rate2['win_rate'], win_rate2['price'])
-    # plt.show()
-
-    # plt.scatter(win_rate3['win_rate'], win_rate3['price'])
-    # plt.show()
-
-    # plt.scatter(win_rate4['win_rate'], win_rate4['price'])
-    # plt.show()
-
-    # plt.scatter(win_rate5['win_rate'], win_rate5['price'])
-    # plt.show()
-
-
-    # # plt.scatter(test['stats_mean'], test['win_rate'])
-    # # plt.show()
-    
-    
-    # # plt.scatter(test['price'], test['all_stats_mean'])
-    # # plt.show()
-
-    # plt.scatter(test['price'], test['rng_mean'])
-    # plt.show()
-
     ext.save(pegas, 'just a test.pkl')
     
 
