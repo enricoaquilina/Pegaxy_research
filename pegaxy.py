@@ -40,9 +40,9 @@ class PegaxyExtractor:
         self.data = []
         self.filename = 'all_pegas {}.pkl'.format(datetime.now().strftime("%Y%m%d"))
 
-        self.url1 = ""
-        self.url2 = ""
-        self.url3 = ""
+        self.url1 = "https://api-apollo.pegaxy.io/v1/game-api/market/pegasListing/{id}?gender=Male&sortType=ASC&sortBy=price&currency=0xc2132D05D31c914a87C6611C10748AEb04B58e8F&isAuction=false&breedTime[0]=0"
+        self.url2 = "https://api-apollo.pegaxy.io/v1/game-api/market/pegasListing/{id}?&marketType=FixedPrice&currency=0xc2132D05D31c914a87C6611C10748AEb04B58e8F&breedFrom=0&breedTo=7"
+        self.url3 = "https://api-apollo.pegaxy.io/v1/game-api/market/listing/{id}"
         
         # ua = UserAgent()
         # header = {'User-Agent':str(ua.firefox)}
@@ -60,6 +60,9 @@ class PegaxyExtractor:
 
     def get_count(self):
         r = requests.get("https://api-apollo.pegaxy.io/v1/game-api/market/pegasListing/{id}?&marketType=FixedPrice&currency=0xc2132D05D31c914a87C6611C10748AEb04B58e8F&breedFrom=0&breedTo=7")
+
+        # r = requests.get(self.url1)
+
         print("Getting {} Pegas, {} pages".format(r.json()['total'], math.ceil(r.json()['total'] / 12)))
         return math.ceil(r.json()['total'] / 12)
     def transform(self, data):
@@ -108,6 +111,8 @@ class PegaxyExtractor:
     ) -> dict:
 
         url = f"https://api-apollo.pegaxy.io/v1/game-api/market/pegasListing/{id}?&marketType=FixedPrice&currency=0xc2132D05D31c914a87C6611C10748AEb04B58e8F&breedFrom=0&breedTo=7"
+        # url = f"https://api-apollo.pegaxy.io/v1/game-api/market/pegasListing/{id}?gender=Male&sortType=ASC&sortBy=price&currency=0xc2132D05D31c914a87C6611C10748AEb04B58e8F&isAuction=false&breedTime[0]=0"
+
 
         response = await session.request('GET', url=url, **kwargs)
         # Note that this may raise an exception for non-2xx responses
@@ -143,9 +148,9 @@ if __name__ == '__main__':
     ext = PegaxyExtractor()
 
 # Start Extraction
-    # asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-    # asyncio.run(ext.start(ext.get_count()))
-    # asyncio.run(ext.get_deets())
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+    asyncio.run(ext.start(ext.get_count()))
+    asyncio.run(ext.get_deets())
 
     
 # Start Transformation
