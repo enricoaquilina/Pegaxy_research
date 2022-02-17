@@ -59,7 +59,10 @@ class PegaxyExtractor:
         ]
 
     def get_count(self):
-        r = requests.get("https://api-apollo.pegaxy.io/v1/game-api/market/pegasListing/{id}?&marketType=FixedPrice&currency=0xc2132D05D31c914a87C6611C10748AEb04B58e8F&breedFrom=0&breedTo=7")
+
+        # url = f"https://api-apollo.pegaxy.io/v1/game-api/market/pegasListing/{id}?gender=Male&sortType=ASC&sortBy=price&currency=0xc2132D05D31c914a87C6611C10748AEb04B58e8F&isAuction=false&breedTime[0]=0"
+        url = "https://api-apollo.pegaxy.io/v1/game-api/market/pegasListing/marketType=FixedPrice&currency=0xc2132D05D31c914a87C6611C10748AEb04B58e8F&breedFrom=0&breedTo=7"
+        r = requests.get(url)
 
         # r = requests.get(self.url1)
 
