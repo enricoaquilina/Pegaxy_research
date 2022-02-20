@@ -162,6 +162,10 @@ if __name__ == '__main__':
     # pegas = ext.load('all_pegas 20220213.pkl')
     pegas = ext.load()
     ext.save(pegas, 'just a test.pkl')
+
+
+        
+   
     
 
 
