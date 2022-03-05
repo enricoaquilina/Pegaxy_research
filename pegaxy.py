@@ -43,6 +43,7 @@ class PegaxyExtractor:
         self.url1 = "https://api-apollo.pegaxy.io/v1/game-api/market/pegasListing/{id}?gender=Male&sortType=ASC&sortBy=price&currency=0xc2132D05D31c914a87C6611C10748AEb04B58e8F&isAuction=false&breedTime[0]=0"
         self.url2 = "https://api-apollo.pegaxy.io/v1/game-api/market/pegasListing/{id}?&marketType=FixedPrice&currency=0xc2132D05D31c914a87C6611C10748AEb04B58e8F&breedFrom=0&breedTo=7"
         self.url3 = "https://api-apollo.pegaxy.io/v1/game-api/market/listing/{id}"
+        self.url_race_history = "https://api-apollo.pegaxy.io/v1/game-api/race/history/pega/{id}"
         
         # ua = UserAgent()
         # header = {'User-Agent':str(ua.firefox)}
@@ -68,6 +69,25 @@ class PegaxyExtractor:
 
         print("Getting {} Pegas, {} pages".format(r.json()['total'], math.ceil(r.json()['total'] / 12)))
         return math.ceil(r.json()['total'] / 12)
+
+
+    def get_rent_history(self, id=173682):
+        r = requests.get(self.url_race_history.format(id))
+
+        data = r.json()
+        totals = { 'wins': 0, 'total_races': 0, 'total_reward': 0}
+        for idx, race in enumerate(data['data']):
+            print("Race {}: {}".format(idx+1, datetime.fromtimestamp(race['race']['end'])))
+
+            if race['position'] >= 4:
+                totals['total_races'] += 1
+            else:
+                totals['wins'] += 1
+                totals['total_reward'] += race['reward']
+
+        print("Win rate: {}, Total reward: {}".format(totals['wins']/ totals['total_races'], totals['total_reward']))
+        print(totals)
+
     def transform(self, data):
         pega_details = []
 
@@ -124,6 +144,8 @@ class PegaxyExtractor:
 
         return data['market']        
 
+    
+
     async def start(self, pages):
         async with ClientSession() as session:
             tasks = [] 
@@ -150,11 +172,12 @@ class PegaxyExtractor:
 if __name__ == '__main__':
     ext = PegaxyExtractor()
 
+    ext.get_rent_history()
 # Start Extraction
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-    asyncio.run(ext.start(ext.get_count()))
-    asyncio.run(ext.get_deets())
-
+    # asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+    # asyncio.run(ext.start(ext.get_count()))
+    # asyncio.run(ext.get_deets())
+    
     
 # Start Transformation
     ## pegas = [pega['nft']['win_rate'] = "{:.4f}".format(win_rate * 100) for pega in pegas if 'nft' in pega]
