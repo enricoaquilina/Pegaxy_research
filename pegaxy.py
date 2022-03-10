@@ -70,23 +70,24 @@ class PegaxyExtractor:
         print("Getting {} Pegas, {} pages".format(r.json()['total'], math.ceil(r.json()['total'] / 12)))
         return math.ceil(r.json()['total'] / 12)
 
+    # def get_user_pegas(address):
+        
 
-    def get_rent_history(self, id=173682):
-        r = requests.get(self.url_race_history.format(id))
+    def get_rent_history(self):
+        r = requests.get(self.url_race_history.format(id=173682))
 
         data = r.json()
-        totals = { 'wins': 0, 'total_races': 0, 'total_reward': 0}
+        self.totals = { 'wins': 0, 'total_races': 0, 'total_reward': 0}
         for idx, race in enumerate(data['data']):
             print("Race {}: {}".format(idx+1, datetime.fromtimestamp(race['race']['end'])))
 
             if race['position'] >= 4:
-                totals['total_races'] += 1
+                self.totals['total_races'] += 1
             else:
-                totals['wins'] += 1
-                totals['total_reward'] += race['reward']
+                self.totals['wins'] += 1
+                self.totals['total_reward'] += race['reward']
 
-        print("Win rate: {}, Total reward: {}".format(totals['wins']/ totals['total_races'], totals['total_reward']))
-        print(totals)
+        print("Win rate: {}, Total reward: {}".format(self.totals['wins']/ self.totals['total_races'], self.totals['total_reward']))
 
     def transform(self, data):
         pega_details = []
@@ -172,17 +173,14 @@ class PegaxyExtractor:
 if __name__ == '__main__':
     ext = PegaxyExtractor()
 
-    ext.get_rent_history()
+    # ext.get_rent_history()
 # Start Extraction
-    # asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-    # asyncio.run(ext.start(ext.get_count()))
-    # asyncio.run(ext.get_deets())
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+    asyncio.run(ext.start(ext.get_count()))
+    asyncio.run(ext.get_deets())
     
     
-# Start Transformation
-    ## pegas = [pega['nft']['win_rate'] = "{:.4f}".format(win_rate * 100) for pega in pegas if 'nft' in pega]
-    
-    # pegas = ext.load('all_pegas 20220213.pkl')
+# Start Transformation    
     pegas = ext.load()
     ext.save(pegas, 'just a test.pkl')
 
