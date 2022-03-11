@@ -181,8 +181,8 @@ if __name__ == '__main__':
     
     
 # Start Transformation    
-    pegas = ext.load()
-    ext.save(pegas, 'just a test.pkl')
+    # pegas = ext.load()
+    # ext.save(pegas, 'just a test.pkl')
 
 
         
