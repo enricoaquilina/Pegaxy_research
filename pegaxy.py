@@ -26,7 +26,7 @@ import platform
 from datetime import datetime
 import requests
 import statistics
-from aiohttp import ClientSession
+from aiohttp import ClientSession, ContentTypeError
 import matplotlib.pyplot as plt
 
 # TODO
@@ -71,6 +71,15 @@ class PegaxyExtractor:
         return math.ceil(r.json()['total'] / 12)
 
     # def get_user_pegas(address):
+
+    def get_market_pega(self):
+        url = "https://api-apollo.pegaxy.io/v1/game-api/market/pegalisting"
+        r = requests.get(url)
+
+        pegas_market = r.json()['market']
+
+        print("Getting {} Pegas, {} pages".format(r.json()['total'], math.ceil(r.json()['total'] / 12)))
+        
         
 
     def get_rent_history(self):
@@ -96,6 +105,8 @@ class PegaxyExtractor:
             try:
                 for pega in iteration:
                     pega_details.append(pega)
+            except ContentTypeError as ct:
+                print("No content found {}: {}".format(ct))
             except Exception as e:
                 print("Error in idx {}: {}".format(idx, e))
 
@@ -179,6 +190,8 @@ if __name__ == '__main__':
     asyncio.run(ext.start(ext.get_count()))
     asyncio.run(ext.get_deets())
     
+# Extraction of market pegas
+    # ext.get_market_pega()
     
 # Start Transformation    
     # pegas = ext.load()
