@@ -106,8 +106,10 @@ class PegaxyExtractor:
                 for pega in iteration:
                     pega_details.append(pega)
             except ContentTypeError as ct:
+                data.remove(iteration)
                 print("No content found {}: {}".format(ct))
             except Exception as e:
+                data.remove(iteration)
                 print("Error in idx {}: {}".format(idx, e))
 
             
@@ -119,6 +121,15 @@ class PegaxyExtractor:
             filename = self.filename
 
         file = open(filename, 'wb')
+
+        try:
+            for datum in list(data):
+                if isinstance(datum, aiohttp.client_exceptions.ContentTypeError):
+                    data.remove(datum)
+        except Exception as e:
+            data.remove(datum)
+
+
         pickle.dump(data, file)
     def load(self, filename=None):
         if filename is None:
